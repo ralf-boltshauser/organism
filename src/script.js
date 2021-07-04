@@ -22,28 +22,35 @@ const scene = new THREE.Scene();
  * Water
  */
 // Geometry
-const waterGeometry = new THREE.SphereBufferGeometry(2,128,128);
+const waterGeometry = new THREE.SphereBufferGeometry(2, 128, 128);
+
+let getRandomColor = () => {
+  return `rgb(${Math.floor(Math.random() * 255)},${Math.floor(
+    Math.random() * 255
+  )},${Math.floor(Math.random() * 255)})`;
+};
 
 // Color
-debugObject.depthColor = "#777";
-debugObject.surfaceColor = "#bbb";
-scene.background = new THREE.Color("#333");
+debugObject.depthColor = getRandomColor();
+debugObject.surfaceColor = getRandomColor();
+scene.background = new THREE.Color("#111");
 
 // Material
+const randomness = (Math.random() * 10 + 95) / 100;
 const waterMaterial = new THREE.ShaderMaterial({
   vertexShader: waterVertexShader,
   fragmentShader: waterFragmentShader,
   uniforms: {
     uTime: { value: 0 },
 
-    uBigWaveSpeed: { value: 1.75 },
-    uBigWavesElevation: { value: 0.2 },
+    uBigWaveSpeed: { value: 1.75 * randomness },
+    uBigWavesElevation: { value: 0.2 * randomness },
     uBigWavesFrequency: { value: new THREE.Vector2(4, 1.5) },
 
-    uSmallWavesElevation: { value: 0.15 },
-    uSmallWavesFrequency: { value: 8 },
-    uSmallWavesSpeed: { value: 0.2 },
-    uSmallWavesIterations: { value: 4 },
+    uSmallWavesElevation: { value: 0.15 * randomness },
+    uSmallWavesFrequency: { value: 8 * randomness },
+    uSmallWavesSpeed: { value: 0.2 * randomness },
+    uSmallWavesIterations: { value: 4 * randomness },
 
     uDepthColor: { value: new THREE.Color(debugObject.depthColor) },
     uSurfaceColor: { value: new THREE.Color(debugObject.surfaceColor) },
@@ -109,11 +116,11 @@ renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
  * Animate
  */
 const clock = new THREE.Clock();
-
+const startingPoint = Math.random() * 10;
 const tick = () => {
   const elapsedTime = clock.getElapsedTime();
 
-  //waterMaterial.uniforms.uTime.value = elapsedTime;
+  waterMaterial.uniforms.uTime.value = startingPoint;
   // Update controls
   controls.update();
 
