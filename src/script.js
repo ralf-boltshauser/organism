@@ -11,7 +11,6 @@ import waterFragmentShader from "./shaders/water/fragment.glsl";
  * Base
  */
 // Debug
-const gui = new dat.GUI({ width: 340 });
 const debugObject = {};
 // Canvas
 const canvas = document.querySelector("canvas.webgl");
@@ -23,12 +22,12 @@ const scene = new THREE.Scene();
  * Water
  */
 // Geometry
-const waterGeometry = new THREE.PlaneGeometry(2, 2, 512, 512);
+const waterGeometry = new THREE.SphereBufferGeometry(2,128,128);
 
 // Color
-debugObject.depthColor = "#186691";
-debugObject.surfaceColor = "#9bd8ff";
-scene.background = new THREE.Color(debugObject.depthColor);
+debugObject.depthColor = "#777";
+debugObject.surfaceColor = "#bbb";
+scene.background = new THREE.Color("#333");
 
 // Material
 const waterMaterial = new THREE.ShaderMaterial({
@@ -42,7 +41,7 @@ const waterMaterial = new THREE.ShaderMaterial({
     uBigWavesFrequency: { value: new THREE.Vector2(4, 1.5) },
 
     uSmallWavesElevation: { value: 0.15 },
-    uSmallWavesFrequency: { value: 3 },
+    uSmallWavesFrequency: { value: 8 },
     uSmallWavesSpeed: { value: 0.2 },
     uSmallWavesIterations: { value: 4 },
 
@@ -53,81 +52,6 @@ const waterMaterial = new THREE.ShaderMaterial({
   },
   side: THREE.DoubleSide,
 });
-
-gui
-  .add(waterMaterial.uniforms.uBigWavesElevation, "value")
-  .min(0)
-  .max(1)
-  .step(0.001)
-  .name("wave Elevation");
-gui
-  .add(waterMaterial.uniforms.uBigWavesFrequency.value, "x")
-  .min(0)
-  .max(10)
-  .step(0.001)
-  .name("wave frequency x");
-gui
-  .add(waterMaterial.uniforms.uBigWavesFrequency.value, "y")
-  .min(0)
-  .max(10)
-  .step(0.001)
-  .name("wave frequency y");
-gui
-  .add(waterMaterial.uniforms.uBigWaveSpeed, "value")
-  .min(0)
-  .max(4)
-  .step(0.001)
-  .name("wave speed");
-gui
-  .addColor(debugObject, "depthColor")
-  .name("depth Color")
-  .onChange(() => {
-    waterMaterial.uniforms.uDepthColor.value.set(debugObject.depthColor);
-    scene.background = new THREE.Color(debugObject.depthColor);
-  });
-gui
-  .addColor(debugObject, "surfaceColor")
-  .name("surface Color")
-  .onChange(() => {
-    waterMaterial.uniforms.uSurfaceColor.value.set(debugObject.surfaceColor);
-  });
-gui
-  .add(waterMaterial.uniforms.uColorOffset, "value")
-  .min(0)
-  .max(1)
-  .step(0.001)
-  .name("color offset");
-gui
-  .add(waterMaterial.uniforms.uColorMultiplier, "value")
-  .min(0)
-  .max(10)
-  .step(0.001)
-  .name("color multiplier");
-gui
-  .add(waterMaterial.uniforms.uSmallWavesElevation, "value")
-  .min(0)
-  .max(1)
-  .step(0.001)
-  .name("small waves elevation");
-gui
-  .add(waterMaterial.uniforms.uSmallWavesFrequency, "value")
-  .min(0)
-  .max(30)
-  .step(0.001)
-  .name("uSmallWavesFrequency");
-gui
-  .add(waterMaterial.uniforms.uSmallWavesSpeed, "value")
-  .min(0)
-  .max(4)
-  .step(0.001)
-  .name("uSmallWavesSpeed");
-gui
-  .add(waterMaterial.uniforms.uSmallWavesIterations, "value")
-  .min(0)
-  .max(10)
-  .step(1)
-  .name("uSmallWavesIterations");
-
 // Mesh
 const water = new THREE.Mesh(waterGeometry, waterMaterial);
 water.rotation.x = -Math.PI * 0.5;
@@ -165,7 +89,7 @@ const camera = new THREE.PerspectiveCamera(
   0.1,
   50
 );
-camera.position.set(1, 1, 1);
+camera.position.set(5, 5, 1);
 scene.add(camera);
 
 // Controls
@@ -189,7 +113,7 @@ const clock = new THREE.Clock();
 const tick = () => {
   const elapsedTime = clock.getElapsedTime();
 
-  waterMaterial.uniforms.uTime.value = elapsedTime;
+  //waterMaterial.uniforms.uTime.value = elapsedTime;
   // Update controls
   controls.update();
 

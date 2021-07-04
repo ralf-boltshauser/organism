@@ -109,7 +109,7 @@ void main()
     }
 
 
-    modelPosition.y += elevation;
+    modelPosition += distance(vec3(0), vec3(modelPosition.xyz)) * elevation;
  
     vec4 viewPosition = viewMatrix * modelPosition;
     vec4 projectedPosition = projectionMatrix * viewPosition;
